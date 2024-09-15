@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "195294940409",
+    "project_id": "locationnotesapp-6cb5e",
+    "storage_bucket": "locationnotesapp-6cb5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195294940409:android:5c76d44b4fb1051171e628",
+        "android_client_info": {
+          "package_name": "com.locationnotesapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbR3sMx-FkZXihGKsVzdhq5sbrQ1kdKik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
