@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { fetchNotes } from "../redux/slices/notesSlice";
 import { useDispatch } from "../src/hooks"; // Make sure the import path for useDispatch is correct.
+import { defaultLatitude, defaultLongitude } from "./NoteScreen";
 
 const NotesMapScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -19,8 +20,8 @@ const NotesMapScreen: React.FC = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 37.78825, // Example latitude for initial region
-          longitude: -122.4324, // Example longitude for initial region
+          latitude: defaultLatitude, // Example latitude for initial region
+          longitude: defaultLongitude, // Example longitude for initial region
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}

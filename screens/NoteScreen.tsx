@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  Platform,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import {
   addNoteAndSave,
@@ -8,8 +16,12 @@ import {
   Note,
 } from "../redux/slices/notesSlice";
 import Geolocation from "react-native-geolocation-service";
+import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 import { useDispatch } from "../src/hooks";
 import { RootStackParamList } from "../App";
+
+export const defaultLatitude = 14.583508;
+export const defaultLongitude = 121.009213;
 
 const NoteScreen: React.FC<StackScreenProps<RootStackParamList, "Note">> = ({
   route,
@@ -30,9 +42,31 @@ const NoteScreen: React.FC<StackScreenProps<RootStackParamList, "Note">> = ({
       setDate(new Date(note.date));
       setLocation(note.location);
     } else {
-      fetchAndSetLocation();
+      requestLocationPermission(); // Request permission before fetching location
     }
   }, []);
+
+  const requestLocationPermission = async () => {
+    let permissionResult;
+    if (Platform.OS === "ios") {
+      permissionResult = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    } else if (Platform.OS === "android") {
+      permissionResult = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+      );
+    }
+
+    if (permissionResult === RESULTS.GRANTED) {
+      fetchAndSetLocation();
+    } else {
+      Geolocation.requestAuthorization("always");
+      Alert.alert(
+        "Permission Denied",
+        "Location permission is required to use this feature."
+      );
+      setLocation({ latitude: defaultLatitude, longitude: defaultLongitude });
+    }
+  };
 
   const fetchAndSetLocation = () => {
     Geolocation.getCurrentPosition(
@@ -48,7 +82,7 @@ const NoteScreen: React.FC<StackScreenProps<RootStackParamList, "Note">> = ({
           "Location Error",
           "Unable to fetch location. Using default."
         );
-        setLocation({ latitude: 11.64365, longitude: 78.14502 }); // Default location
+        setLocation({ latitude: defaultLatitude, longitude: defaultLongitude }); // Default location
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
