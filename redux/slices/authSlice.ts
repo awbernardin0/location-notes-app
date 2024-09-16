@@ -1,4 +1,3 @@
-// Imports
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import {AppThunk} from '../store'; // Ensure this path matches where you configure your Redux store

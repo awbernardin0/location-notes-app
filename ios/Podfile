@@ -23,6 +23,10 @@ target 'LocationNotesApp' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Storage'
 
+  # React Native Maps dependencies
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+
   config = use_native_modules!
 
   use_frameworks! :linkage => :static
