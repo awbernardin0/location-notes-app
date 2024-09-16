@@ -1,21 +1,33 @@
-import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import notesReducer from './slices/notesSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import notesReducer from "./slices/notesSlice";
+import authReducer from "./slices/authSlice";
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    notes: notesReducer,
-  },
+// Persist config
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage, // Use AsyncStorage for React Native
+};
+
+// Combine reducers
+const rootReducer = combineReducers({
+  notes: notesReducer,
+  auth: authReducer,
 });
 
+// Persisted reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // redux-persist uses non-serializable values, so we need to disable this check
+    }),
+});
+
+export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-// Define a type for the thunk actions
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
